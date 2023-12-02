@@ -14,7 +14,6 @@ app.use(express.json());
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.USER_NAME}:${process.env.USER_PASS}@cluster0.etnbh8i.mongodb.net/?retryWrites=true&w=majority`;
-console.log(process.env.USER_NAME)
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
     serverApi: {
@@ -34,6 +33,12 @@ async function run() {
         app.get('/addProduct', async (req, res) => {
             const cursor = productCollection.find();
             const result = await cursor.toArray();
+            res.send(result)
+        })
+        app.get('/carDetails/:id', async (req, res) => {
+            const carID = req.params.id;
+            const query = { _id: new ObjectId(carID) }
+            const result = await productCollection.findOne(query);
             res.send(result)
         })
 
