@@ -56,9 +56,6 @@ async function run() {
         })
 
         app.get('/brandPage', async (req, res) => {
-            // const brand = req.params.brandName;
-            // const query = { brand: new ObjectId(brand) }
-
             const cursor = brandCollection.find();
             const result = await cursor.toArray()
             res.send(result)
