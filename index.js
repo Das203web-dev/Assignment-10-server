@@ -29,7 +29,8 @@ async function run() {
         await client.connect();
         const database = client.db("automotiveDB");
         const productCollection = database.collection("products");
-        const brandCollection = database.collection("brands")
+        const brandCollection = database.collection("brands");
+        const cart = database.collection("cart")
         app.get('/addProduct', async (req, res) => {
             const cursor = productCollection.find();
             const result = await cursor.toArray();
@@ -42,6 +43,18 @@ async function run() {
             res.send(result)
         })
 
+        app.post('/myCart', async (req, res) => {
+            const cartProduct = req.body;
+            // console.log(cartProduct);
+            const result = await cart.insertOne(cartProduct);
+            res.send(result)
+        })
+        app.get("/myCart", async (req, res) => {
+            const cartData = cart.find();
+            const result = await cartData.toArray();
+            res.send(result)
+        })
+
         app.get('/brandPage', async (req, res) => {
             // const brand = req.params.brandName;
             // const query = { brand: new ObjectId(brand) }
@@ -50,14 +63,7 @@ async function run() {
             const result = await cursor.toArray()
             res.send(result)
         })
-        // app.get("/brandPage/:brandName", async (req, res) => {
-        //     const brand = req.params.brandName;
-        //     console.log(brand)
-        //     const query = { brandName: new ObjectId(brand) }
-        //     const result = brandCollection.findOne(brand);
-        //     const final = await result.toArray()
-        //     res.send(final)
-        // })
+
         app.post('/brandPage', async (req, res) => {
             const brands = req.body;
             console.log(brands)
@@ -69,6 +75,14 @@ async function run() {
             const product = req.body;
             console.log(product)
             const result = await productCollection.insertOne(product);
+            res.send(result)
+        })
+        app.delete('/myCart/:id', async (req, res) => {
+            const deleteProductId = req.params.id;
+            // console.log(typeof deleteProductId)
+            const query = { _id: new ObjectId(deleteProductId) }
+            console.log(query)
+            const result = await cart.deleteOne(query);
             res.send(result)
         })
         // Send a ping to confirm a successful connection
