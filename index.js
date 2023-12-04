@@ -36,6 +36,13 @@ async function run() {
             const result = await cursor.toArray();
             res.send(result)
         })
+        // app.get('/addProduct/:brand', async (req, res) => {
+        //     const brandName = req.params.brand;
+        //     const query = { brand: brandName }
+        //     const products = productCollection.findOne(query);
+        //     res.send(products)
+
+        // })
         app.get('/carDetails/:id', async (req, res) => {
             const carID = req.params.id;
             const query = { _id: new ObjectId(carID) }
@@ -54,6 +61,14 @@ async function run() {
             const result = await cartData.toArray();
             res.send(result)
         })
+        // app.get("/myCart/:id", async (req, res) => {
+        //     const id = req.params.id;
+        //     const query = { _id: new ObjectId(id) }
+
+        //     const cartData = await cart.findOne(query);
+        //     // const result = await cartData.toArray();
+        //     res.send(cartData)
+        // })
 
         app.get('/brandPage', async (req, res) => {
             const cursor = brandCollection.find();
@@ -76,11 +91,12 @@ async function run() {
         })
         app.delete('/myCart/:id', async (req, res) => {
             const deleteProductId = req.params.id;
-            // console.log(typeof deleteProductId)
+            console.log(typeof deleteProductId)
             const query = { _id: new ObjectId(deleteProductId) }
-            console.log(query)
+            console.log(typeof query)
             const result = await cart.deleteOne(query);
-            res.send(result)
+            console.log(result)
+            // res.send(result)
         })
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
