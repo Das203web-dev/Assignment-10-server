@@ -61,14 +61,6 @@ async function run() {
             const result = await cartData.toArray();
             res.send(result)
         })
-        // app.get("/myCart/:id", async (req, res) => {
-        //     const id = req.params.id;
-        //     const query = { _id: new ObjectId(id) }
-
-        //     const cartData = await cart.findOne(query);
-        //     // const result = await cartData.toArray();
-        //     res.send(cartData)
-        // })
 
         app.get('/brandPage', async (req, res) => {
             const cursor = brandCollection.find();
@@ -91,12 +83,9 @@ async function run() {
         })
         app.delete('/myCart/:id', async (req, res) => {
             const deleteProductId = req.params.id;
-            console.log(typeof deleteProductId)
             const query = { _id: new ObjectId(deleteProductId) }
-            console.log(typeof query)
             const result = await cart.deleteOne(query);
-            console.log(result)
-            // res.send(result)
+            res.send(result)
         })
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
