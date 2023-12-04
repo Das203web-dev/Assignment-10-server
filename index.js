@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+
 const cors = require('cors');
 require('dotenv').config()
 
@@ -12,7 +14,6 @@ app.use(express.json());
 // shuvojit
 
 
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.USER_NAME}:${process.env.USER_PASS}@cluster0.etnbh8i.mongodb.net/?retryWrites=true&w=majority`;
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -34,6 +35,25 @@ async function run() {
         app.get('/addProduct', async (req, res) => {
             const cursor = productCollection.find();
             const result = await cursor.toArray();
+            res.send(result)
+        })
+        app.put('/addProduct/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const product = req.body;
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    brand: product.brand,
+                    carType: product.car,
+                    description: product.description,
+                    image: product.image,
+                    name: product.name,
+                    price: product.price,
+                    rating: product.rating
+                }
+            }
+            const result = await productCollection.updateOne(filter, updateDoc, options)
             res.send(result)
         })
         // app.get('/addProduct/:brand', async (req, res) => {
@@ -61,6 +81,25 @@ async function run() {
             const result = await cartData.toArray();
             res.send(result)
         })
+        app.get("/brandPage/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await productCollection.findOne(query);
+            res.send(result)
+        })
+        app.delete('/myCart/:id', async (req, res) => {
+            const deleteProductId = req.params.id;
+            console.log(deleteProductId)
+            const query = { _id: new ObjectId(deleteProductId) }
+            const result = await cart.deleteOne(query);
+            res.send(result)
+        })
+        app.get("/update", async (req, res) => {
+            const updateProduct = req.body;
+            const result = await updateProduct.toArray()
+            res.send(result)
+
+        })
 
         app.get('/brandPage', async (req, res) => {
             const cursor = brandCollection.find();
@@ -81,12 +120,7 @@ async function run() {
             const result = await productCollection.insertOne(product);
             res.send(result)
         })
-        app.delete('/myCart/:id', async (req, res) => {
-            const deleteProductId = req.params.id;
-            const query = { _id: new ObjectId(deleteProductId) }
-            const result = await cart.deleteOne(query);
-            res.send(result)
-        })
+
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
