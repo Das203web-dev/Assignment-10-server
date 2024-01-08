@@ -7,7 +7,7 @@ require('dotenv').config()
 
 const port = process.env.PORT || 5000;
 
-app.use(cors({ origin: ['https://automitivebd.onrender.com/'] }));
+app.use(cors({ origin: ['https://automitivebd.onrender.com'] }));
 app.use(express.json());
 
 // ipxrBu4H0pauZSGr
