@@ -7,7 +7,7 @@ require('dotenv').config()
 
 const port = process.env.PORT || 5000;
 
-app.use(cors({ origin: ['automotivebdclientsite.firebaseapp.com'] }));
+app.use(cors());
 app.use(express.json());
 
 // ipxrBu4H0pauZSGr
